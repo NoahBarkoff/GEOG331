@@ -32,3 +32,21 @@ Mat.bycol[,2]
 
 # Read weather data
 datw <- read.csv("2011124.csv")
+
+# Specify a column with a proper date format
+# Note the format here dataframe$column
+datw$dateF <- as.Date(datw$DATE, "%Y-%m-%d")
+# Google date formatting in r to find more options and learn more
+
+# Create a date column by reformatting the date to only include years
+# And indicating that it should be treated as numeric data
+datw$year <- as.numeric(format(datw$dateF,"%Y"))
+
+# Creating five different vectors with character, numeric, integer, and factor data
+
+# Character vector
+A <- c("B","C","D","E","F")
+
+# Numeric vector
+X <- c(1.64,2.18,6.92,1.97,5.51)
+Y <- c(1L,2L,3L,4L,5L)
