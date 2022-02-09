@@ -49,4 +49,55 @@ A <- c("B","C","D","E","F")
 
 # Numeric vector
 X <- c(1.64,2.18,6.92,1.97,5.51)
+
+# Integer vector
 Y <- c(1L,2L,3L,4L,5L)
+
+# Factor vector
+Z <- gl(5,1, labels = c(1,2,3,4,5))
+print(Z)
+
+# Determine all unique site names
+unique(datw$NAME)
+
+# Mean maximum temperature for Aberdeen
+mean(datw$TMAX[datw$NAME == "ABERDEEN, WA US"])
+# Now with na.rm so there is no NA
+mean(datw$TMAX[datw$NAME == "ABERDEEN, WA US"], na.rm=TRUE)
+
+# Calculate average daily temperature
+datw$TAVE <- datw$TMIN + ((datw$TMAX-datw$TMIN)/2)
+
+# Calculate mean temperature across all sites
+averageTemp <- aggregate(datw$TAVE, by=list(datw$NAME), FUN="mean",na.rm=TRUE)
+
+# Change names of columns in average temperature data
+colnames(averageTemp) <- c("NAME","MAAT")
+
+# Convert level to number for factor data type
+datw$siteN <- as.numeric(datw$NAME)
+
+# Make histogram for the first site in the levels
+hist(datw$TAVE[datw$siteN == 1],
+     freq=FALSE, 
+     main = paste(levels(datw$NAME)[1]),
+     xlab = "Average daily temperature (degrees C)", 
+     ylab="Relative frequency",
+     col="grey50",
+     border="white")
+
+# Add mean line with red (tomato3) color
+abline(v = mean(datw$TAVE[datw$siteN == 1],na.rm=TRUE), 
+       col = "tomato3",
+       lwd = 3)
+
+# Add standard deviation lines below and above the mean with red (tomato3) color
+abline(v = mean(datw$TAVE[datw$siteN == 1],na.rm=TRUE) - sd(datw$TAVE[datw$siteN == 1],na.rm=TRUE), 
+       col = "tomato3", 
+       lty = 3,
+       lwd = 3)
+
+abline(v = mean(datw$TAVE[datw$siteN == 1],na.rm=TRUE) + sd(datw$TAVE[datw$siteN == 1],na.rm=TRUE), 
+       col = "tomato3", 
+       lty = 3,
+       lwd = 3)
