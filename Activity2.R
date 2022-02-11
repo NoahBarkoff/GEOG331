@@ -101,3 +101,58 @@ abline(v = mean(datw$TAVE[datw$siteN == 1],na.rm=TRUE) + sd(datw$TAVE[datw$siteN
        col = "tomato3", 
        lty = 3,
        lwd = 3)
+
+# Make a histogram for the first sit in the levels
+h1 <- hist(datw$TAVE[datw$siteN == 1],
+           freq=FALSE, 
+           main = paste(levels(datw$NAME)[1]),
+           xlab = "Average daily temperature (degrees C)", 
+           ylab="Relative frequency",
+           col="grey50",
+           border="white")
+
+# Plot the normal across all temperature values
+x.plot <- seq(-10,30, length.out = 100)
+
+# Find the probability density from mean and stand deviation
+y.plot <-  dnorm(seq(-10,30, length.out = 100),
+                 mean(datw$TAVE[datw$siteN == 1],na.rm=TRUE),
+                 sd(datw$TAVE[datw$siteN == 1],na.rm=TRUE))
+
+# Makes the 2 plots have the same scale
+y.scaled <- (max(h1$density)/max(y.plot)) * y.plot
+
+# Create the line of density in temperature
+points(x.plot,
+       y.scaled, 
+       type = "l", 
+       col = "royalblue3",
+       lwd = 4, 
+       lty = 2)
+
+# Find probability of temperature being below 0 and below 5
+pnorm(0,
+      mean(datw$TAVE[datw$siteN == 1], na.rm=TRUE),
+      sd(datw$TAVE[datw$siteN == 1],na.rm=TRUE))
+
+pnorm(5,
+      mean(datw$TAVE[datw$siteN == 1], na.rm=TRUE),
+      sd(datw$TAVE[datw$siteN == 1],na.rm=TRUE))
+
+# Find probability of temperature being between 0 and 5 degrees
+pnorm(5,
+      mean(datw$TAVE[datw$siteN == 1], na.rm=TRUE),
+      sd(datw$TAVE[datw$siteN == 1],na.rm=TRUE))-
+pnorm(0,
+      mean(datw$TAVE[datw$siteN == 1], na.rm=TRUE),
+      sd(datw$TAVE[datw$siteN == 1],na.rm=TRUE))
+
+# Find probability of temperature being above 20 degrees
+1-pnorm(20,
+      mean(datw$TAVE[datw$siteN == 1], na.rm=TRUE),
+      sd(datw$TAVE[datw$siteN == 1],na.rm=TRUE))
+
+# Find the temperature where 95% of days will be at or below
+qnorm(0.95,
+      mean(datw$TAVE[datw$siteN == 1],na.rm=TRUE),
+      sd(datw$TAVE[datw$siteN == 1],na.rm=TRUE))
