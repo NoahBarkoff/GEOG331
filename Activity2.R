@@ -225,3 +225,25 @@ pnorm(0,
 qnorm(0.95,
       mean(datw$TAVE[datw$siteN == 1],na.rm=TRUE),
       sd(datw$TAVE[datw$siteN == 1],na.rm=TRUE))
+
+# Question 6
+
+mean(datw$TAVE[datw$siteN == 1], na.rm=TRUE) + sd(datw$TAVE[datw$siteN == 1],na.rm=TRUE)
+
+1-pnorm(15.34334,
+        mean((datw$TAVE+4)[datw$siteN == 1], na.rm=TRUE),
+        sd(datw$TAVE[datw$siteN == 1],na.rm=TRUE))
+
+# Question 7 - Make a histogram of precipitation in Aberdeen
+
+HPRCP <- hist(datw$PRCP[datw$siteN == 1],
+           freq=FALSE, 
+           main = paste(levels(datw$NAME)[1]),
+           xlab = "Average daily rainfall (Centimeters)", 
+           ylab="Relative frequency",
+           col="grey50",
+           border="white")
+
+# Question 8 - Make a histogram of annual precipitation at one site
+
+sum(datw$PRCP[datw$siteN == 1][datw$year == 1939],na.rm=TRUE)
