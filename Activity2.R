@@ -42,7 +42,7 @@ datw$dateF <- as.Date(datw$DATE, "%Y-%m-%d")
 # And indicating that it should be treated as numeric data
 datw$year <- as.numeric(format(datw$dateF,"%Y"))
 
-# Creating five different vectors with character, numeric, integer, and factor data
+# Question 2 - Creating four different vectors with character, numeric, integer, and factor data
 
 # Character vector
 A <- c("B","C","D","E","F")
@@ -246,4 +246,21 @@ HPRCP <- hist(datw$PRCP[datw$siteN == 1],
 
 # Question 8 - Make a histogram of annual precipitation at one site
 
-sum(datw$PRCP[datw$siteN == 1][datw$year == 1939],na.rm=TRUE)
+# Find sum of precipitation each year at every site
+averagePrcp <- aggregate(datw$PRCP, by=list(datw$NAME, datw$year, datw$siteN), FUN="sum",na.rm=TRUE)
+
+# Name each column in the averagePrcp table
+colnames(averagePrcp) <- c("NAME","year", "siteN","PRCP")
+
+# Make histogram for annual precipitation at Aberdeen
+HPRCP1 <- hist(averagePrcp$PRCP[averagePrcp$siteN == 1],
+              freq=FALSE, 
+              main = paste(levels(averagePrcp$NAME)[1]),
+              xlab = "Average yearly rainfall (Centimeters)", 
+              ylab="Relative frequency",
+              col="grey50",
+              border="white")
+
+# Question 9 - Get the mean of annual precipitation for all sites
+
+averagePRCP <- aggregate(averagePrcp$PRCP, by=list(averagePrcp$NAME), FUN="mean",na.rm=TRUE)
