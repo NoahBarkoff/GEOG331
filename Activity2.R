@@ -86,6 +86,75 @@ hist(datw$TAVE[datw$siteN == 1],
      col="grey50",
      border="white")
 
+# Question 4 - Make histograms for 3 more sites in different colors
+
+h2 <- hist(datw$TAVE[datw$siteN == 2],
+           freq=FALSE, 
+           main = paste(levels(datw$NAME)[2]),
+           xlab = "Average daily temperature (degrees C)", 
+           ylab="Relative frequency",
+           col="red",
+           border="white")
+
+
+abline(v = mean(datw$TAVE[datw$siteN == 2],na.rm=TRUE), 
+       col = "grey50",
+       lwd = 3)
+
+abline(v = mean(datw$TAVE[datw$siteN == 2],na.rm=TRUE) - sd(datw$TAVE[datw$siteN == 1],na.rm=TRUE), 
+       col = "grey50", 
+       lty = 3,
+       lwd = 3)
+
+abline(v = mean(datw$TAVE[datw$siteN == 2],na.rm=TRUE) + sd(datw$TAVE[datw$siteN == 1],na.rm=TRUE), 
+       col = "grey50", 
+       lty = 3,
+       lwd = 3)
+
+h3 <- hist(datw$TAVE[datw$siteN == 3],
+           freq=FALSE, 
+           main = paste(levels(datw$NAME)[3]),
+           xlab = "Average daily temperature (degrees C)", 
+           ylab="Relative frequency",
+           col="blue",
+           border="white")
+
+abline(v = mean(datw$TAVE[datw$siteN == 3],na.rm=TRUE), 
+       col = "grey50",
+       lwd = 3)
+
+abline(v = mean(datw$TAVE[datw$siteN == 3],na.rm=TRUE) - sd(datw$TAVE[datw$siteN == 1],na.rm=TRUE), 
+       col = "grey50", 
+       lty = 3,
+       lwd = 3)
+
+abline(v = mean(datw$TAVE[datw$siteN == 3],na.rm=TRUE) + sd(datw$TAVE[datw$siteN == 1],na.rm=TRUE), 
+       col = "grey50", 
+       lty = 3,
+       lwd = 3)
+
+h4 <- hist(datw$TAVE[datw$siteN == 4],
+           freq=FALSE, 
+           main = paste(levels(datw$NAME)[4]),
+           xlab = "Average daily temperature (degrees C)", 
+           ylab="Relative frequency",
+           col="green",
+           border="white")
+
+abline(v = mean(datw$TAVE[datw$siteN == 4],na.rm=TRUE), 
+       col = "grey50",
+       lwd = 3)
+
+abline(v = mean(datw$TAVE[datw$siteN == 4],na.rm=TRUE) - sd(datw$TAVE[datw$siteN == 1],na.rm=TRUE), 
+       col = "grey50", 
+       lty = 3,
+       lwd = 3)
+
+abline(v = mean(datw$TAVE[datw$siteN == 4],na.rm=TRUE) + sd(datw$TAVE[datw$siteN == 1],na.rm=TRUE), 
+       col = "grey50", 
+       lty = 3,
+       lwd = 3)
+
 # Add mean line with red (tomato3) color
 abline(v = mean(datw$TAVE[datw$siteN == 1],na.rm=TRUE), 
        col = "tomato3",
@@ -102,7 +171,7 @@ abline(v = mean(datw$TAVE[datw$siteN == 1],na.rm=TRUE) + sd(datw$TAVE[datw$siteN
        lty = 3,
        lwd = 3)
 
-# Make a histogram for the first sit in the levels
+# Make a histogram for the first site in the levels
 h1 <- hist(datw$TAVE[datw$siteN == 1],
            freq=FALSE, 
            main = paste(levels(datw$NAME)[1]),
