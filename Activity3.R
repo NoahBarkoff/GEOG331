@@ -21,7 +21,12 @@ b <- c(8,4,5)
 assert(length(a) == length(b), "error: unequal length")
 
 # Read Bewkes weather data file
-
 datW <- read.csv("Z:/students/nbarkoff/Data/bewkes/bewkes_weather.csv",
                  na.strings=c("#N/A"), skip=3, header=FALSE)
 
+# Get sensor information
+sensorInfo <-   read.csv("Z:/students/nbarkoff/Data/bewkes/bewkes_weather.csv",
+                         na.strings=c("#N/A"), nrows=2)
+
+# Use same column names for datW as in sensorInfo
+colnames(datW) <-   colnames(sensorInfo)
