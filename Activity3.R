@@ -30,3 +30,61 @@ sensorInfo <-   read.csv("Z:/students/nbarkoff/Data/bewkes/bewkes_weather.csv",
 
 # Use same column names for datW as in sensorInfo
 colnames(datW) <-   colnames(sensorInfo)
+
+# Install lubridate
+install.packages(c("lubridate"))
+
+# Convert dates to standard month/day/year hour:minute format
+dates <- mdy_hm(datW$timestamp, tz= "America/New_York")
+
+# Calculate the day of the year
+datW$doy <- yday(dates)
+
+# Calculate hour in the day
+datW$hour <- hour(dates) + (minute(dates)/60)
+
+# Calculate decimal day of the year
+datW$DD <- datW$doy + (datW$hour/24)
+
+# Find all N/A values in the air.temperature, wind speed, precipitation, soil temp, and soil moisture columns column
+length(which(is.na(datW$air.temperature)))
+length(which(is.na(datW$wind.speed)))
+length(which(is.na(datW$precipitation)))
+length(which(is.na(datW$soil.moisture)))
+length(which(is.na(datW$soil.temp)))
+
+# Make a dot plot of soil moisture 
+plot(datW$DD, datW$soil.moisture, pch=19, type="b", xlab = "Day of Year",
+     ylab="Soil moisture (cm3 water per cm3 soil)")
+
+# Make a plot from properly taken data of ai temp
+plot(datW$DD, datW$air.temperature, pch=19, type="b", xlab = "Day of Year",
+     ylab="Air temperature (degrees C)")
+
+# Set NA values in the air temp column for temp values under freezing during the summer
+datW$air.tempQ1 <- ifelse(datW$air.temperature < 0, NA, datW$air.temperature)
+
+# Observe values for median, minimum, maximum, etc data for air temp values in the summer
+quantile(datW$air.tempQ1)
+
+# Find days with an air temp under 8 degrees C
+datW[datW$air.tempQ1 < 8,]  
+
+# Find days with an air temp above 33 degrees C
+datW[datW$air.tempQ1 > 33,]  
+
+# Normalize the lightning strikes time to match the time scale of the precipitation
+lightscale <- (max(datW$precipitation)/max(datW$lightning.acvitivy)) * datW$lightning.acvitivy
+
+# Create the plot with axis labeled and no points
+plot(datW$DD , datW$precipitation, xlab = "Day of Year", ylab = "Precipitation & lightning",
+     type="n")
+
+# Plot semi-transparent points for precipitation
+points(datW$DD[datW$precipitation > 0], datW$precipitation[datW$precipitation > 0],
+       col= rgb(95/255,158/255,160/255,.5), pch=15)
+# Plot solid color points for lightning
+points(datW$DD[lightscale > 0], lightscale[lightscale > 0],
+       col= "tomato3", pch=19)
+
+# Filter the storms with wind and 
