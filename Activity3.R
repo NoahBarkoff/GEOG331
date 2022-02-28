@@ -33,6 +33,7 @@ colnames(datW) <-   colnames(sensorInfo)
 
 # Install lubridate
 install.packages(c("lubridate"))
+library(lubridate)
 
 # Convert dates to standard month/day/year hour:minute format
 dates <- mdy_hm(datW$timestamp, tz= "America/New_York")
@@ -52,6 +53,9 @@ length(which(is.na(datW$wind.speed)))
 length(which(is.na(datW$precipitation)))
 length(which(is.na(datW$soil.moisture)))
 length(which(is.na(datW$soil.temp)))
+
+# Allow multiple plots to be shown at once
+par(mfrow=c(2,2))
 
 # Make a dot plot of soil moisture 
 plot(datW$DD, datW$soil.moisture, pch=19, type="b", xlab = "Day of Year",
@@ -83,8 +87,24 @@ plot(datW$DD , datW$precipitation, xlab = "Day of Year", ylab = "Precipitation &
 # Plot semi-transparent points for precipitation
 points(datW$DD[datW$precipitation > 0], datW$precipitation[datW$precipitation > 0],
        col= rgb(95/255,158/255,160/255,.5), pch=15)
+
 # Plot solid color points for lightning
 points(datW$DD[lightscale > 0], lightscale[lightscale > 0],
        col= "tomato3", pch=19)
 
-# Filter the storms with wind and 
+# Question 5
+# Just creating an object with the same data already in the DatW dataset
+
+
+
+# Filter out the storms where there is some of rain and lightning
+# As well as storms where there is lots of rain
+# And create a new air temp column that excludes these values
+datW$air.tempQ2 <- ifelse(datW$precipitation  >= 2 & datW$lightning.acvitivy >0, NA,
+                          ifelse(datW$precipitation > 5, NA, datW$air.tempQ1))
+
+# Question 6
+datW$wind.speedQ2 <- ifelse(datW$precipitation  >= 2 & datW$lightning.acvitivy >0, NA,
+                          ifelse(datW$precipitation > 5, NA, datW$wind.speed))
+
+
