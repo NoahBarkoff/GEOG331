@@ -116,24 +116,65 @@ assert(length(which(is.na(datW$wind.speedQ2)))==length(which(is.na(datW$air.temp
 length(which(is.na(datW$wind.speedQ2)))
 length(which(is.na(datW$wind.speed)))
 
+#---------------
+
 # Question 7
-plot(datW$soil.temp , datW$air.tempQ1, xlab = "Day of Year", ylab = "Soil & Air Temperature",
+plot(datW$DD , datW$air.tempQ1, xlab = "Day of Year", ylab = "Soil & Air Temperature",
      type="n")
 
-lightscale2 <- (max(datW$air.tempQ1)/max(datW$soil.temp)) * datW$soil.temp
+points(datW$soil.temp, col= "blue", pch=15)
+points(datW$air.tempQ1, col= "red", pch=15)
 
-points(datW$DD[datW$air.tempQ1],
-       col= "blue", pch=15)
+####### Do I need to do this?
+rainscale <- (max(datW$soil.moisture)/max(datW$precipitation)) * datW$precipitation
 
+plot(datW$DD , datW$precipitation, xlab = "Day of Year", ylab = "Precipitation & Soil Moisture",
+     type="n", ylim=c(0,.2))
 
+####### Why are all the precipitation values 0?
+points(datW$precipitation, col= "blue", pch=15)
+points(datW$soil.moisture, col= "red", pch=15)
 
+soil.tempQ1 <- na.omit(datW$soil.temp)
 
-lines(lowess(datW$soil.temp, datW$air.tempQ1), col="blue")
+#-----------
 
+# Question 8
+# Create three vectors 
+name <- c("al", "bea", "carol")
+age <- c(6, 7, 4)
+hair <- c("brown", "green", "blond")
 
+# Create data frame 
+#children <- data.frame(name, age, hair)
+#children
+#name age  hair
+#1    al   6 brown
+#2   bea   7 green
+#3 carol   4 blond
 
-points(datW$DD[datW$air.tempQ1 > 0], datW$air.tempQ1[datW$air.tempQ1 > 0],
-       col= rgb(95/255,158/255,160/255,.5), pch=15)
+#ave (x, FUN=mean, )
+#help(NA)
+
+# ------------------
+# Question 9
+par(mfrow=c(2,2))
+
+plot (datW$DD, datW$air.temperature, xlab = "Day of Year", 
+      ylab = "Air Temperature", type="n", main="Air Temperature in the Summer")
+points(datW$air.temperature, col="blue", pch=15)
+
+plot (datW$DD, datW$soil.moisture, xlab = "Day of Year", 
+      ylab = "Soil Moisture", type="n", main="Soil Moisture in the Summer")
+points(datW$soil.moisture, col="blue", pch=15)
+
+plot (datW$DD, datW$soil.temp, xlab = "Day of Year", 
+      ylab = "Soil Temperature", type="n", main="Soil Temperature in the Summer")
+points(datW$soil.temp, col="blue", pch=15)
+
+plot (datW$DD, datW$precipitation, xlab = "Day of Year", 
+      ylab = "Precipitation", type="n", main="Precipitation in the Summer")
+points(datW$precipitation, col="blue", pch=15)
 
 
 
