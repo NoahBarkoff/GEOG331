@@ -94,7 +94,9 @@ points(datW$DD[lightscale > 0], lightscale[lightscale > 0],
 
 # Question 5
 # Just creating an object with the same data already in the DatW dataset
-
+assert(length(lightscale)==length(datW$wind.speed),
+       "error: unequal lengths")
+# ---------------
 
 
 # Filter out the storms where there is some of rain and lightning
@@ -106,5 +108,39 @@ datW$air.tempQ2 <- ifelse(datW$precipitation  >= 2 & datW$lightning.acvitivy >0,
 # Question 6
 datW$wind.speedQ2 <- ifelse(datW$precipitation  >= 2 & datW$lightning.acvitivy >0, NA,
                           ifelse(datW$precipitation > 5, NA, datW$wind.speed))
+
+
+assert(length(which(is.na(datW$wind.speedQ2)))==length(which(is.na(datW$air.tempQ2))),
+                          "error: unequal number of NA oberservations")
+
+length(which(is.na(datW$wind.speedQ2)))
+length(which(is.na(datW$wind.speed)))
+
+# Question 7
+plot(datW$soil.temp , datW$air.tempQ1, xlab = "Day of Year", ylab = "Soil & Air Temperature",
+     type="n")
+
+lightscale2 <- (max(datW$air.tempQ1)/max(datW$soil.temp)) * datW$soil.temp
+
+points(datW$DD[datW$air.tempQ1],
+       col= "blue", pch=15)
+
+
+
+
+lines(lowess(datW$soil.temp, datW$air.tempQ1), col="blue")
+
+
+
+points(datW$DD[datW$air.tempQ1 > 0], datW$air.tempQ1[datW$air.tempQ1 > 0],
+       col= rgb(95/255,158/255,160/255,.5), pch=15)
+
+
+
+
+
+
+
+
 
 
