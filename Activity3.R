@@ -114,6 +114,11 @@ datW$wind.speedQ2 <- ifelse(datW$precipitation  >= 2 & datW$lightning.acvitivy >
 assert(length(which(is.na(datW$wind.speedQ2)))==length(which(is.na(datW$wind.speed))),
                           "error: unequal number of NA oberservations")
 
+######This isn't working
+assert(which(is.na(datW$wind.speedQ2))==(which(datW$precipitation  >= 2) +
+       which(datW$lightning.acvitivy >0) + which(datW$precipitation > 5)),
+       "error: unequal number of NA oberservations")
+
 plot(datW$DD , datW$wind.speedQ2, xlab = "Day of Year", ylab = "Wind Speed",
      type="l")
 
