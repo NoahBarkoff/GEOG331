@@ -111,12 +111,11 @@ datW$wind.speedQ2 <- ifelse(datW$precipitation  >= 2 & datW$lightning.acvitivy >
                           ifelse(datW$precipitation > 5, NA, datW$wind.speed))
 
 
-assert(length(which(is.na(datW$wind.speedQ2)))==length(which(is.na(datW$wind.speed))),
+assert(which(is.na(datW$wind.speedQ2))==(which(datW$precipitation  >= 2 & datW$lightning.acvitivy >0 |  datW$precipitation > 5)),
                           "error: unequal number of NA oberservations")
 
 ######This isn't working
-assert(which(is.na(datW$wind.speedQ2))==(which(datW$precipitation  >= 2) +
-       which(datW$lightning.acvitivy >0) + which(datW$precipitation > 5)),
+assert(which(is.na(datW$wind.speedQ2))== which( datW$precipitation  >= 2 & datW$lightning.acvitivy >0 |  datW$precipitation > 5),
        "error: unequal number of NA oberservations")
 
 plot(datW$DD , datW$wind.speedQ2, xlab = "Day of Year", ylab = "Wind Speed",
@@ -138,20 +137,6 @@ plot(datW$DD , datW$precipitation, xlab = "Day of Year", ylab = "Precipitation",
 plot(datW$DD , datW$soil.moisture, xlab = "Day of Year", ylab = "Soil Moisture",
      type="l", xlim=c(180,193))
 
-points(datW$soil.temp, col= "blue", pch=15)
-points(datW$air.tempQ1, col= "red", pch=15)
-
-####### Do I need to do this?
-rainscale <- (max(datW$soil.moisture)/max(datW$precipitation)) * datW$precipitation
-
-plot(datW$DD , datW$precipitation, xlab = "Day of Year", ylab = "Precipitation & Soil Moisture",
-     type="n", ylim=c(0,.2), xlim=c(180,190))
-
-####### Why are all the precipitation values 0?
-points(datW$precipitation, col= "blue", pch=15)
-points(datW$soil.moisture, col= "red", pch=15)
-
-soil.tempQ1 <- na.omit(datW$soil.temp)
 
 #-----------
 
@@ -177,15 +162,12 @@ length(datW$soil.temp[!is.na(datW$soil.temp)])
 
 # Calculate time period for each observation
 
-length(datW$air.temperature[!is.na(datW$air.temperature)])*30/60/24
-length(datW$wind.speedQ2[!is.na(datW$wind.speedQ2)])*30/60/24
-length(datW$soil.moisture[!is.na(datW$soil.moisture)])*30/60/24
-length(datW$precipitation[!is.na(datW$precipitation)])*30/60/24
-length(datW$soil.temp[!is.na(datW$soil.temp)])*30/60/24
-
+head(datW$timestamp)
+tail(datW$timestamp)
 
 # ------------------
 # Question 9
+
 par(mfrow=c(2,2))
 
 plot (datW$DD, datW$air.temperature, xlab = "Day of Year", 
@@ -199,11 +181,6 @@ plot (datW$DD, datW$soil.temp, xlab = "Day of Year",
 
 plot (datW$DD, datW$precipitation, xlab = "Day of Year", 
       ylab = "Precipitation", type="l", main="Precipitation in the Summer")
-
-points(datW$air.temperature, col="blue", pch=15)
-points(datW$soil.moisture, col="blue", pch=15)
-points(datW$soil.temp, col="blue", pch=15)
-points(datW$precipitation, col="blue", pch=15)
 
 
 
