@@ -16,10 +16,18 @@ iris.versicolor <- iris %>% filter(Species == "versicolor")
 
 #for each of the following relationships
 #1. iris  sepal length x width
-
 #2. iris  petal length x width
 #3. iris sepal length x petal length
 
+Regressions.list <- list()
+
+for(i in 2:ncol(iris.versicolor)) {                 
+  
+  predictors_i <- colnames(iris.versicolor)[2:i]    
+  Regressions.list[[i - 1]] <- summary(    
+    lm(iris.versicolor$width ~ ., iris.versicolor[ , c("width", predictors_i)]))
+  
+}
 # hint: consider using a list, and also new vectors for regression variables
 
 
