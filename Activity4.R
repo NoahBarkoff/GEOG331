@@ -27,7 +27,7 @@ library(ggplot2)
 
 # Create data frame with variables only in the versicolor species
 iris.versicolor <- iris %>% filter(Species == "versicolor")
-
+flower <- datD[iris$Species == "versicolor",]
 # Create linear models for each of the regressions to compare to for loop regressions for correctness
 Sepal.LW <- lm(Sepal.Length ~ Sepal.Width, data = iris.versicolor)
 Petal.LW <- lm(Petal.Length ~ Petal.Width, data = iris.versicolor)
