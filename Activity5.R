@@ -3,6 +3,8 @@
 # 3/23/2022
 
 
+########### Load in data ###########
+
 # Library the lubridate package
 library(lubridate)
 
@@ -15,6 +17,8 @@ datP <- read.csv("Z:/data/streamflow/2049867.csv")
 
 # Create dataset with only reliable values
 datD <- datH[datH$discharge.flag == "A",]
+
+########### Format dates ###########
 
 # Create new vector of data and time
 datesD <- as.Date(datD$date, "%m/%d/%Y")
@@ -53,5 +57,91 @@ datP$decDay <- datP$doy + (datP$hour/24)
 datP$decYear <- ifelse(leap_year(datP$year),datP$year + (datP$decDay/366),
                        datP$year + (datP$decDay/365))
 
-# Plot discharge with decimal dates
-plot(datD$decYear, datD$discharge, type="l", xlab="Year", ylab=expression(paste("Discharge ft"^"3 ","sec"^"-1")))
+########### Format plots ###########
+
+# Calculate average and standard deviation for discharge data
+aveF <- aggregate(datD$discharge, by=list(datD$doy), FUN="mean")
+colnames(aveF) <- c("doy","dailyAve")
+sdF <- aggregate(datD$discharge, by=list(datD$doy), FUN="sd")
+colnames(sdF) <- c("doy","dailySD")
+
+# Make all plots show up the same size
+dev.new(width=8,height=8)
+
+# Make plots include all text by standardizing margin size
+par(mai=c(1,1,1,1))
+
+# Plot discharge with standard deviation visible
+plot(aveF$doy,aveF$dailyAve, 
+     type="l", 
+     xlab="Year", 
+     ylab=expression(paste("Discharge ft"^"3 ","sec"^"-1")),
+     lwd=2,
+     ylim=c(0,90),
+     xaxs="i", yaxs ="i",#remove gaps from axes
+     axes=FALSE)#no axes
+polygon(c(aveF$doy, rev(aveF$doy)),#x coordinates
+        c(aveF$dailyAve-sdF$dailySD,rev(aveF$dailyAve+sdF$dailySD)),#ycoord
+        col=rgb(0.392, 0.584, 0.929,.2), #color that is semi-transparent
+        border=NA#no border
+)       
+axis(1, seq(0,360, by=40), #tick intervals
+     lab=seq(0,360, by=40)) #tick labels
+axis(2, seq(0,80, by=20),
+     seq(0,80, by=20),
+     las = 2)#show ticks at 90 degree angle
+legend("topright", c("mean","1 standard deviation"), #legend items
+       lwd=c(2,NA),#lines
+       col=c("black",rgb(0.392, 0.584, 0.929,.2)),#colors
+       pch=c(NA,15),#symbols
+       bty="n")#no legend border
+
+########### Format a hydrograph ###########
+
+# Subset discharge and precipitation data on September 5-6
+hydroD <- datD[datD$doy >= 248 & datD$doy < 250 & datD$year == 2011,]
+hydroP <- datP[datP$doy >= 248 & datP$doy < 250 & datP$year == 2011,]
+
+#get minimum and maximum range of discharge to plot
+#go outside of the range so that it's easy to see high/low values
+#floor rounds down the integer
+yl <- floor(min(hydroD$discharge))-1
+#ceiling rounds up to the integer
+yh <- ceiling(max(hydroD$discharge))+1
+#minimum and maximum range of precipitation to plot
+pl <- 0
+pm <-  ceiling(max(hydroP$HPCP))+.5
+#scale precipitation to fit on the 
+hydroP$pscale <- (((yh-yl)/(pm-pl)) * hydroP$HPCP) + yl
+
+# Make discharge hydrograph
+plot(hydroD$decDay,
+     hydroD$discharge, 
+     type="l", 
+     ylim=c(yl,yh), 
+     lwd=2,
+     xlab="Day of year", 
+     ylab=expression(paste("Discharge ft"^"3 ","sec"^"-1")))
+#add bars to indicate precipitation 
+for(i in 1:nrow(hydroP)){
+  polygon(c(hydroP$decDay[i]-0.017,hydroP$decDay[i]-0.017,
+            hydroP$decDay[i]+0.017,hydroP$decDay[i]+0.017),
+          c(yl,hydroP$pscale[i],hydroP$pscale[i],yl),
+          col=rgb(0.392, 0.584, 0.929,.2), border=NA)
+}
+
+########### Format box and violin plots ###########
+
+# Use ggplot2
+library(ggplot2)
+
+# Specify year as a factor
+datD$yearPlot <- as.factor(datD$year)
+
+#Make a boxplot
+ggplot(data= datD, aes(yearPlot,discharge)) + 
+  geom_boxplot()
+
+# Make a violin plot
+ggplot(data= datD, aes(yearPlot,discharge)) + 
+  geom_violin()
