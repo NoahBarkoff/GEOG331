@@ -67,7 +67,7 @@ colnames(sdF) <- c("doy","dailySD")
 
 # Make all plots show up the same size
 dev.new(width=8,height=8)
-
+ylab=expression(paste("Discharge ft"^"3 ","sec"^"-1"))
 # Make plots include all text by standardizing margin size
 par(mai=c(1,1,1,1))
 
@@ -106,6 +106,8 @@ colnames(dat2017) <- c(" agency_cd", "site_no", "date", "time", "tz",
 
 ave2017 <- aggregate(dat2017$discharge, by=list(dat2017$doy), FUN="mean")                       
 colnames(ave2017) <- c("doy","dailyave")
+
+lines(dat2017$discharge, type="l", col="red")
 
 lines(ave2017$doy, ave2017$dailyAve, type="l", col="red")
 
