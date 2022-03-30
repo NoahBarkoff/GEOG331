@@ -100,21 +100,14 @@ legend("topright", c("mean","1 standard deviation"), #legend items
 
 dat2017 <- datD[datD$yearPlot == "2017",]
 
-ave2017 <- aggregate(dat2017$discharge, by=list(dat2017$doy), FUN="mean")
-colnames(aveF) <- c("doy","dailyAve")
+colnames(dat2017) <- c(" agency_cd", "site_no", "date", "time", "tz",
+                       "discharge", "discharge.flag", "stage", "stage.flag",
+                       "doy", "year", "hour", "decDay", "decYear", "yearPlot")
 
-plot(dat2017$doy,ave2017$dailyAve,
-          type="l", 
-          xlab="Year", 
-          ylab=expression(paste("Discharge ft"^"3 ","sec"^"-1")),
-          lwd=2,
-          ylim=c(0,90),
-          xaxs="i", yaxs ="i",#remove gaps from axes
-          axes=FALSE,#no axes
-          col="red")
+ave2017 <- aggregate(dat2017$discharge, by=list(dat2017$doy), FUN="mean")                       
+colnames(ave2017) <- c("doy","dailyave")
 
-
-
+lines(ave2017$doy, ave2017$dailyAve, type="l", col="red")
 
 ########### Format a hydrograph ###########
 
