@@ -145,6 +145,23 @@ for(i in 1:nrow(hydroP)){
           col=rgb(0.392, 0.584, 0.929,.2), border=NA)
 }
 
+#---------- Question 7 ----------#
+
+library("dplyr")
+
+datP$days <- paste(yday(dateP), year(dateP))
+
+Days.observations <- summarise(group_by(datP, days), sum(hour))
+
+colnames(Days.observations) <- c("UniqueDate", "SumHours")
+
+datFP <- ifelse(Days.observations$SumHours == sum(c(0:23)), "full", "not full")
+colnames(datFP) <- c("Fulldays", "NULL")
+datFP
+
+
+
+
 ########### Format box and violin plots ###########
 
 # Use ggplot2
