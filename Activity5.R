@@ -157,7 +157,6 @@ abline(v = full.data$decYear, col="red")
 par(mfrow=c(2,1))
 
 # Format a hydrograph
-
 #subsest discharge and precipitation within range of interest
 hydroD <- datD[datD$doy >= 248 & datD$doy < 250 & datD$year == 2011,]
 hydroP <- datP[datP$doy >= 248 & datP$doy < 250 & datP$year == 2011,]
