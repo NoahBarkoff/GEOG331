@@ -11,6 +11,7 @@ library("dplyr")
 PrecipLM <- read.csv("Z:/students/nbarkoff/Data/prc_mic_basn_mon.csv",
                    header = TRUE, skip = 5)
 # USE PIVOT LONGER
+# https://stackoverflow.com/questions/22286419/move-a-column-to-first-position-in-a-data-frame
 
 
 ########### Also ????????????? ############
