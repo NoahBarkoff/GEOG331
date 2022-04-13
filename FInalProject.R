@@ -41,10 +41,12 @@ datWaterLevelsLMf <- datWaterLevelsLM[c(265:1236),  ]
 
 # Plot overall trend in precipitation data and water level data on same graph
 
-plot(datPrecipLMf$'year', datPrecipLMf$'precipitation(mm)', type="l", xlab="Year", 
-     ylab= "Precipitation and Water Level in Lake Michigan", 
+plot(datWaterLevelsLMf$`waterlevel(m)`, datPrecipLMf$`precipitation(mm)`, pch = 16, cex = 1.3, col = "blue", xlab="Water Level (M)", 
+     ylab= "Precipitation(mm)", 
      main = "Name")
-lines(datPrecipLMf$'year', datWaterLevelsLMf$`waterlevel(m)`, col="red")
+
+Linear.model1 <- lm(datWaterLevelsLMf$`waterlevel(m)` ~ datPrecipLMf$`precipitation(mm)`, )
+abline(Linear.model1)
 
 
 
