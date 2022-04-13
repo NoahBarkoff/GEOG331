@@ -32,8 +32,20 @@ WaterLevels <- read.csv("Z:/students/nbarkoff/Data/GLHYD_data_metric.csv",
 datWaterLevelsLM <- WaterLevels[,c(1,2,4)]
 
 # Change column names
-colnames(datWaterLevelsLM) <- c("year","month", "waterlevel(m)")
+colnames(datWaterLevelsLM) <- c("month","year", "waterlevel(m)")
 
 # Include only shared years between data sets
+
+datPrecipLMf <- datPrecipLM[-c(973:984), ]
+datWaterLevelsLMf <- datWaterLevelsLM[c(265:1236),  ]
+
+# Plot overall trend in precipitation data and water level data on same graph
+
+plot(datPrecipLMf$'year', datPrecipLMf$'precipitation(mm)', type="l", xlab="Year", 
+     ylab= "Precipitation and Water Level in Lake Michigan", 
+     main = "Name")
+lines(datPrecipLMf$'year', datWaterLevelsLMf$`waterlevel(m)`, col="red")
+
+
 
 # https://stackoverflow.com/questions/12328056/how-do-i-delete-rows-in-a-data-frame
