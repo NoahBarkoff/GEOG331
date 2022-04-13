@@ -5,6 +5,7 @@
 # Library dplyr
 library("dplyr")
 library("tidyverse")
+library("ggplot2")
 
 # Read in data files
 
@@ -18,10 +19,10 @@ PrecipLM <- read.csv("Z:/students/nbarkoff/Data/prc_mic_basn_mon.csv",
 PrecipLM.COltoRow <- pivot_longer(PrecipLM, cols = (2:13))
 
 # Change column names
-colnames(PrecipLM.COltoRow) <- c("year","month", "precipitation(mm)")
+colnames(PrecipLM.COltoRow) <- c("year","month", "precipitation")
 
 # Move columns so each data frame has same format
-datPrecipLM <- PrecipLM.COltoRow %>% select("month", "year", "precipitation(mm)")
+datPrecipLM <- PrecipLM.COltoRow %>% select("month", "year", "precipitation")
 
 
 # Read in all Great Lakes water level data
@@ -32,7 +33,7 @@ WaterLevels <- read.csv("Z:/students/nbarkoff/Data/GLHYD_data_metric.csv",
 datWaterLevelsLM <- WaterLevels[,c(1,2,4)]
 
 # Change column names
-colnames(datWaterLevelsLM) <- c("month","year", "waterlevel(m)")
+colnames(datWaterLevelsLM) <- c("month","year", "waterlevel")
 
 # Include only shared years between data sets
 
@@ -41,11 +42,22 @@ datWaterLevelsLMf <- datWaterLevelsLM[c(265:1236),  ]
 
 # Plot overall trend in precipitation data and water level data on same graph
 
+datLinear.Model <- data.frame (datWaterLevelsLMf$`waterlevel`, datPrecipLMf$`precipitation`)
+# https://www.statology.org/line-of-best-fit-in-r/
+ggplot(data = datLinear.Model, mapping = aes(x = waterlevel(m), y = Sepal.Width, color= Species, size = Petal.Length)) + 
+  geom_point() + theme_classic() + ggtitle("Sepal Length Versus Sepal Size by Species and Petal Length")
+
+
+
 plot(datWaterLevelsLMf$`waterlevel(m)`, datPrecipLMf$`precipitation(mm)`, pch = 16, cex = 1.3, col = "blue", xlab="Water Level (M)", 
      ylab= "Precipitation(mm)", 
      main = "Name")
+abline(lm(datWaterLevelsLMf$`waterlevel(m)` ~ datPrecipLMf$`precipitation(mm)`))
 
-Linear.model1 <- lm(datWaterLevelsLMf$`waterlevel(m)` ~ datPrecipLMf$`precipitation(mm)`, )
+datLinear.Model <- data.frame (datWaterLevelsLMf$'waterlevel', datPrecipLMf$'precipitation')
+colnames(datLinear.Model) <- c("waterlevel(m)", "precipitation(mm)")
+                               
+Linear.model1 <- lm(datWaterLevelsLMf$`waterlevel` ~ datPrecipLMf$`precipitation`)
 abline(Linear.model1)
 
 
