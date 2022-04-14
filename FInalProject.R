@@ -43,23 +43,28 @@ datWaterLevelsLMf <- datWaterLevelsLM[c(265:1236),  ]
 # Plot overall trend in precipitation data and water level data on same graph
 
 datLinear.Model <- data.frame (datWaterLevelsLMf$`waterlevel`, datPrecipLMf$`precipitation`)
+
+# Name datLinear.Model column names
+colnames(datLinear.Model) <- c("waterlevel", "precipitation")
+
+datLinear.Model$precipitation = as.numeric(as.character(datLinear.Model$precipitation))
+
 # https://www.statology.org/line-of-best-fit-in-r/
-ggplot(data = datLinear.Model, mapping = aes(x = waterlevel(m), y = Sepal.Width, color= Species, size = Petal.Length)) + 
-  geom_point() + theme_classic() + ggtitle("Sepal Length Versus Sepal Size by Species and Petal Length")
 
 
-
-plot(datWaterLevelsLMf$`waterlevel(m)`, datPrecipLMf$`precipitation(mm)`, pch = 16, cex = 1.3, col = "blue", xlab="Water Level (M)", 
+#Try using base plotting
+plot(datLinear.Model$waterlevel, datLinear.Model$precipitation, pch = 16, cex = 1.3, col = "blue", xlab="Water Level (M)", 
      ylab= "Precipitation(mm)", 
      main = "Name")
-abline(lm(datWaterLevelsLMf$`waterlevel(m)` ~ datPrecipLMf$`precipitation(mm)`))
-
-datLinear.Model <- data.frame (datWaterLevelsLMf$'waterlevel', datPrecipLMf$'precipitation')
-colnames(datLinear.Model) <- c("waterlevel(m)", "precipitation(mm)")
-                               
-Linear.model1 <- lm(datWaterLevelsLMf$`waterlevel` ~ datPrecipLMf$`precipitation`)
-abline(Linear.model1)
 
 
+abline(Liner.Model)
+Linear.Model <- lm(waterlevel ~ precipitation, data = datLinear.Model)
+abline (lm(waterlevel ~ precipitation, data = datLinear.Model))
 
+
+# Try using ggplot2 
+ggplot(data = datLinear.Model, mapping = aes(x = waterlevel, y = precipitation)) + 
+  geom_point() + theme_bw() + ggtitle("Sepal Length Versus Sepal Size by Species and Petal Length") +
+  geom_smooth(method=lm, se=FALSE)
 # https://stackoverflow.com/questions/12328056/how-do-i-delete-rows-in-a-data-frame
