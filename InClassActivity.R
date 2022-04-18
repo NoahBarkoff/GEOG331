@@ -73,5 +73,7 @@ dev.off()
 nt <- terra::extract(ndvi, gtree2, fun = mean, method = 'bilinear')
 
 # Plot ndvi vs. canopy cover 
-plot (nt$ndvi)
+plot (nt$ndvi, gtree2$cc.pct,
+      pch = 16, col = "blue",
+      xlim = c(0,1))
 
