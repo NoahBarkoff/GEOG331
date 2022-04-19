@@ -57,14 +57,18 @@ plot(datLinear.Model$waterlevel, datLinear.Model$precipitation, pch = 16, cex = 
      ylab= "Precipitation(mm)", 
      main = "Name")
 
-
-abline(Liner.Model)
-Linear.Model <- lm(waterlevel ~ precipitation, data = datLinear.Model)
+# Try 1
 abline (lm(waterlevel ~ precipitation, data = datLinear.Model))
 
+# Try 2
+abline(Liner.Model)
+Linear.Model <- lm(waterlevel ~ precipitation, data = datLinear.Model)
 
-# Try using ggplot2 
+
+# Try using ggplot2 - 3
 ggplot(data = datLinear.Model, mapping = aes(x = waterlevel, y = precipitation)) + 
-  geom_point() + theme_bw() + ggtitle("Sepal Length Versus Sepal Size by Species and Petal Length") +
+  geom_point() + theme_bw() + ggtitle("Name") +
   geom_smooth(method=lm, se=FALSE)
+
+
 # https://stackoverflow.com/questions/12328056/how-do-i-delete-rows-in-a-data-frame
