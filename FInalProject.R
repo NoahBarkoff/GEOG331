@@ -34,10 +34,10 @@ datPrecipLMf <- datPrecipLM[-c(973:984), ]
 datWaterLevelsLMf <- datWaterLevelsLM[c(265:1236),  ]
 
 # Make new data frame with only the variables being plotted for a linear regression
-datLinear.Model <- data.frame (datWaterLevelsLMf$`waterlevel`, datPrecipLMf$`precipitation`)
+datLinear.Model <- data.frame (datWaterLevelsLMf$`waterlevel`, datPrecipLMf$`precipitation`, datTemp$temperature)
 
 # Name datLinear.Model column names
-colnames(datLinear.Model) <- c("waterlevel", "precipitation")
+colnames(datLinear.Model) <- c("waterlevel", "precipitation", "temperature")
 
 # Plot precipitation and water level along with a linear regression
 plot(datLinear.Model$waterlevel, datLinear.Model$precipitation, pch = 16, cex = 1.3, col = "blue", xlab="Water Level (M)", 
@@ -50,3 +50,38 @@ legend("topright", c("Precipitation values","Linear Regression Model"),
        bty="n")
 abline(lm(precipitation~waterlevel, data = datLinear.Model), lwd = 2, col = "red")
 
+# Create a plot and edit temperature dataset
+
+Temperature <- read.csv("Z:/students/nbarkoff/Data/Chicago_Temp.csv",
+                        header = TRUE, skip = 2)
+
+Temp.COltoRow <- pivot_longer(Temperature, cols = (2:13))
+
+colnames(Temp.COltoRow) <- c("year","N/A", "month", "temperature")
+
+datTemp <- Temp.COltoRow %>% select("month", "year", "temperature")
+
+datTemp <- datTemp[-c(973:1032), ]
+
+# Temp with water level
+plot(datLinear.Model$precipitation,datLinear.Model$temperature, pch = 16, cex = 1.3, col = "blue", xlab="precipitation (mm)", 
+     ylab= "Temperature(F)", 
+     main = "Temperature's correlation to rainfall in Chicago from 1940-2020")
+legend("topright", c("Temperature values","Linear Regression Model"),
+       lwd=c(NA,2),
+       col=c("blue","red"),
+       pch=c(16,NA),
+       bty="n")
+abline(lm(precipitation~temperature, data = datLinear.Model), lwd = 2, col = "red")
+
+
+# Temp with water level
+plot(datLinear.Model$waterlevel,datLinear.Model$temperature, pch = 16, cex = 1.3, col = "blue", xlab="Water Level (M)", 
+     ylab= "Temperature(F)", 
+     main = "Temperature's correlation to water level in Chicago from 1940-2020")
+legend("topright", c("Temperature values","Linear Regression Model"),
+       lwd=c(NA,2),
+       col=c("blue","red"),
+       pch=c(16,NA),
+       bty="n")
+abline(lm(temperature~waterlevel, data = datLinear.Model), lwd = 2, col = "red")
