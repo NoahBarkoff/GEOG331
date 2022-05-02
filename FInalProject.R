@@ -6,6 +6,7 @@
 library("dplyr")
 library("tidyverse")
 library("ggplot2")
+library("lubridate")
 
 # Read in Lake Michigan (LM) basin precipitation data
 PrecipLM <- read.csv("Z:/students/nbarkoff/Data/prc_mic_basn_mon.csv",
@@ -89,18 +90,11 @@ abline(lm(temperature~waterlevel, data = datLinear.Model), lwd = 2, col = "red")
 
 
 # All 3 variables 
-cs <- scale_colour_gradient(
-  datLinear.Model$temperature,
-  low = "#132B43",
-  high = "#56B1F7",
-  space = "Lab",
-  na.value = "grey50",
-  guide = "colourbar",
-  aesthetics = "colour"
-)
 
-ggplot(data = datLinear.Model, mapping = aes(x = waterlevel, y = as.numeric(precipitation), color = temperature)) +
-  geom_point() + theme_classic() +  scale_color_manual(values = c("temperature" = "ggplot2.continuous.colour"))
+ggplot(data = datLinear.Model, mapping = aes(x = waterlevel, y = as.numeric(precipitation))) +
+  geom_point(aes(color = temperature), size = 2) +
+  scale_color_gradient(low = "yellow", high = "red") +
+  theme_classic()
                                                                   
 # quantity of extreme temp variables over time                  
 sd(datTemp$temperature) + mean(datTemp$temperature)
@@ -110,7 +104,11 @@ datTempExtreme <- datTemp[datTemp$temperature > 68.449,]
 # data is only summer months. Need data to show all data above 1 sd for all months
 # Need to make a histogram showing number of extreme months per year over time
 
+aggregate(temperature~month+year,datTemp,mean)
+
 plot(datTempExtreme$year,datTempExtreme$temperature, pch = 16, cex = 1.3, col = "blue", xlab="precipitation (mm)", 
      ylab= "Temperature(F)", 
      main = "Temperature's correlation to rainfall in Chicago from 1940-2020")
-abline(lm(year~temperature, data = datTempExtreme), lwd = 2, col = "red")
+
+
+
