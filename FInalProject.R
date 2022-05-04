@@ -104,7 +104,24 @@ datTempExtreme <- datTemp[datTemp$temperature > 68.449,]
 # data is only summer months. Need data to show all data above 1 sd for all months
 # Need to make a histogram showing number of extreme months per year over time
 
-aggregate(temperature~month+year,datTemp,mean)
+TemperatureF <- Temperature[-c(82:86), ]
+
+TempExtreme <- TemperatureF %>% summarise_if(is.numeric, mean) + TemperatureF %>% summarise_if(is.numeric, sd)*2
+
+TempExtreme = subset(TempExtreme, select = -c(13) )
+
+TempExtremeF <- cbind(TempExtreme, share = datTemp$year)
+
+TempExtremeF = subset(TempExtremeF, select = -c(13) )
+
+names(TempExtremeF)[13] <- 'year'
+
+TempExtreme.ColtoRow <- pivot_longer(TempExtreme, cols = (1:12))
+
+colnames(TempExtreme.ColtoRow) <- c("month","ExtremeTemp")
+
+datTempExtreme <- merge(datTemp, TempExtreme.ColtoRow)
+
 
 plot(datTempExtreme$year,datTempExtreme$temperature, pch = 16, cex = 1.3, col = "blue", xlab="precipitation (mm)", 
      ylab= "Temperature(F)", 
