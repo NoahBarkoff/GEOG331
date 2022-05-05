@@ -106,7 +106,7 @@ datTempExtreme <- datTemp[datTemp$temperature > 68.449,]
 
 TemperatureF <- Temperature[-c(82:86), ]
 
-TempExtreme <- TemperatureF %>% summarise_if(is.numeric, mean) + TemperatureF %>% summarise_if(is.numeric, sd)*2
+TempExtreme <- TemperatureF %>% summarise_if(is.numeric, mean) + TemperatureF %>% summarise_if(is.numeric, sd)
 
 TempExtreme = subset(TempExtreme, select = -c(13) )
 
@@ -114,7 +114,7 @@ TempExtremeF <- cbind(TempExtreme, share = datTemp$year)
 
 TempExtremeF = subset(TempExtremeF, select = -c(13) )
 
-names(TempExtremeF)[13] <- 'year'
+names(TempExtremeF)[12] <- 'year'
 
 TempExtreme.ColtoRow <- pivot_longer(TempExtreme, cols = (1:12))
 
@@ -122,10 +122,31 @@ colnames(TempExtreme.ColtoRow) <- c("month","ExtremeTemp")
 
 datTempExtreme <- merge(datTemp, TempExtreme.ColtoRow)
 
+datTempExtremePlot <- data.frame (ifelse (datTempExtreme$temperature > datTempExtreme$ExtremeTemp, 1, 0))
 
-plot(datTempExtreme$year,datTempExtreme$temperature, pch = 16, cex = 1.3, col = "blue", xlab="precipitation (mm)", 
-     ylab= "Temperature(F)", 
-     main = "Temperature's correlation to rainfall in Chicago from 1940-2020")
+colnames(datTempExtremePlot) <- "IsExtreme"
+
+NewColumn <- datTempExtremePlot$IsExtreme
+
+datTempExtreme$IsExtreme <- NewColumn
+
+ExtremeYears <- data.frame (aggregate(datTempExtreme$IsExtreme, list(datTempExtreme$year), FUN=sum))
+
+colnames(ExtremeYears) <- c("year","ExtremeValues")
 
 
+# Plot Extreme Temperatures
+ggplot(data= ExtremeYears, aes(x= year, y= ExtremeValues, group=1)) +
+  geom_line()+
+  geom_point()+
+  geom_smooth(method=lm)+
+  scale_x_discrete(breaks = seq(1940,2020, by = 5))
 
+# Years with 5 or more extreme temperatures
+
+ifelse(ExtremeYears$ExtremeValues > 4, ExtremeYears$year, NA)
+
+# Plot water level and precipitation values per year 
+# with points on the line for extreme years
+
+YearlyPrecip <- data.frame (aggregate(datPrecipLMf$precipitation, list(datPrecipLMf$year), FUN=sum))
