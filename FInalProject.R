@@ -149,4 +149,26 @@ ifelse(ExtremeYears$ExtremeValues > 4, ExtremeYears$year, NA)
 # Plot water level and precipitation values per year 
 # with points on the line for extreme years
 
-YearlyPrecip <- data.frame (aggregate(datPrecipLMf$precipitation, list(datPrecipLMf$year), FUN=sum))
+NumericPrecipitation <- as.numeric(datLinear.Model$precipitation)
+
+YearlyPrecip <- data.frame (aggregate(NumericPrecipitation, list(datTempExtreme$year), FUN=sum))
+
+colnames(YearlyPrecip) <- c("year","precipitation")
+
+NumericWaterLevel <- as.numeric(datLinear.Model$waterlevel)
+
+YearlyWaterLevel <- data.frame (aggregate(NumericWaterLevel, list(datTempExtreme$year), FUN=sum))
+
+colnames(YearlyWaterLevel) <- c("year","waterlevel")
+
+plot(YearlyPrecip$year, YearlyPrecip$precipitation, pch = 16, cex = 1.3, col = "blue", xlab="precipitation (mm)", 
+          ylab= "Temperature(F)", 
+          main = "Temperature's correlation to rainfall in Chicago from 1940-2020")
+
+plot(YearlyWaterLevel$year, YearlyWaterLevel$waterlevel, pch = 16, cex = 1.3, col = "blue", xlab="precipitation (mm)", 
+     ylab= "Temperature(F)", 
+     main = "Temperature's correlation to rainfall in Chicago from 1940-2020")
+
+
+
+
