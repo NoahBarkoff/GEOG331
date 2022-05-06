@@ -44,7 +44,7 @@ colnames(datLinear.Model) <- c("waterlevel", "precipitation", "temperature")
 # Plot precipitation and water level along with a linear regression
 plot(datLinear.Model$waterlevel, datLinear.Model$precipitation, pch = 16, cex = 1.3, col = "blue", xlab="Water Level (M)", 
      ylab= "Precipitation(mm)", 
-     main = "Preciptation's influence on Water Level in Lake Michigan from 1940-2020")
+     main = "Preciptation's Monthly Influence on Water Level in Lake Michigan from 1940-2020")
 legend("topright", c("Precipitation values","Linear Regression Model"),
        lwd=c(NA,2),
        col=c("blue","red"),
@@ -66,9 +66,9 @@ datTemp <- Temp.COltoRow %>% select("month", "year", "temperature")
 datTemp <- datTemp[-c(973:1032), ]
 
 # Temp with water level
-plot(datLinear.Model$precipitation,datLinear.Model$temperature, pch = 16, cex = 1.3, col = "blue", xlab="precipitation (mm)", 
-     ylab= "Temperature(F)", 
-     main = "Temperature's correlation to rainfall in Chicago from 1940-2020")
+plot(datLinear.Model$temperature,datLinear.Model$precipitation, pch = 16, cex = 1.3, col = "blue", xlab="Temperature(F)", 
+     ylab= "precipitation (mm)", 
+     main = "Temperature's Monthly Correlation to Precipitation in Chicago from 1940-2020")
 legend("topright", c("Temperature values","Linear Regression Model"),
        lwd=c(NA,2),
        col=c("blue","red"),
@@ -78,15 +78,15 @@ abline(lm(precipitation~temperature, data = datLinear.Model), lwd = 2, col = "re
 
 
 # Temp with water level
-plot(datLinear.Model$waterlevel,datLinear.Model$temperature, pch = 16, cex = 1.3, col = "blue", xlab="Water Level (M)", 
-     ylab= "Temperature(F)", 
-     main = "Temperature's correlation to water level in Chicago from 1940-2020")
+plot(datLinear.Model$temperature,datLinear.Model$waterlevel, pch = 16, cex = 1.3, col = "blue", xlab="Temperature(F)", 
+     ylab= "Water Level (M)", 
+     main = "Temperature's Monthly Correlation to Water Level in Chicago from 1940-2020")
 legend("topright", c("Temperature values","Linear Regression Model"),
        lwd=c(NA,2),
        col=c("blue","red"),
        pch=c(16,NA),
        bty="n")
-abline(lm(temperature~waterlevel, data = datLinear.Model), lwd = 2, col = "red")
+abline(lm(waterlevel~temperature, data = datLinear.Model), lwd = 2, col = "red")
 
 
 # All 3 variables 
@@ -94,7 +94,8 @@ abline(lm(temperature~waterlevel, data = datLinear.Model), lwd = 2, col = "red")
 ggplot(data = datLinear.Model, mapping = aes(x = waterlevel, y = as.numeric(precipitation))) +
   geom_point(aes(color = temperature), size = 2) +
   scale_color_gradient(low = "yellow", high = "red") +
-  theme_classic()
+  theme_classic() + ggtitle("Precipitation's Monthly Impact on Water Level, Colored by Temperature") +
+  xlab("Water Level (M)") + ylab("Precipitation(mm)")
                                                                   
 # quantity of extreme temp variables over time                  
 sd(datTemp$temperature) + mean(datTemp$temperature)
@@ -140,7 +141,11 @@ ggplot(data= ExtremeYears, aes(x= year, y= ExtremeValues, group=1)) +
   geom_line()+
   geom_point()+
   geom_smooth(method=lm)+
-  scale_x_discrete(breaks = seq(1940,2020, by = 5))
+  scale_x_discrete(breaks = seq(1940,2020, by = 5))+
+  xlab("Year") + ylab("Number of Extreme Months")+
+  ggtitle("Number of Extremely High Temperature Months Per Year")
+
+  
 
 # Years with 5 or more extreme temperatures
 
@@ -161,14 +166,154 @@ YearlyWaterLevel <- data.frame (aggregate(NumericWaterLevel, list(datTempExtreme
 
 colnames(YearlyWaterLevel) <- c("year","waterlevel")
 
-plot(YearlyPrecip$year, YearlyPrecip$precipitation, pch = 16, cex = 1.3, col = "blue", xlab="precipitation (mm)", 
-          ylab= "Temperature(F)", 
-          main = "Temperature's correlation to rainfall in Chicago from 1940-2020")
+YearlyPrecipExtreme <- data.frame (ifelse (YearlyPrecip$year == ifelse(ExtremeYears$ExtremeValues > 4,
+                                              ExtremeYears$year, NA),YearlyPrecip$precipitation, NA ))
 
-plot(YearlyWaterLevel$year, YearlyWaterLevel$waterlevel, pch = 16, cex = 1.3, col = "blue", xlab="precipitation (mm)", 
-     ylab= "Temperature(F)", 
-     main = "Temperature's correlation to rainfall in Chicago from 1940-2020")
+colnames(YearlyPrecipExtreme) <- c("ETPrecipitation")
 
+YearlyWaterLevelExtreme <- data.frame (ifelse (YearlyWaterLevel$year == ifelse(ExtremeYears$ExtremeValues > 4,
+                                          ExtremeYears$year, NA),YearlyWaterLevel$waterlevel, NA ))
+
+colnames(YearlyWaterLevelExtreme) <- c("ETWaterLevel")
+
+NumericTemperature <- as.numeric(datLinear.Model$temperature)
+
+YearlyTemperature <- data.frame (aggregate(NumericTemperature/12, list(datTempExtreme$year), FUN=sum))
+
+colnames(YearlyTemperature) <- c("year", "temperature")
+
+
+
+
+plot(YearlyPrecip$year, YearlyPrecip$precipitation, pch = 16, cex = 1.3, col = "blue", xlab="Year", 
+          ylab= "Precipitation (mm)", 
+          main = "Precipitation in Years with many Hot Months in Chicago from 1940-2020")
+points(y = YearlyPrecipExtreme$ETPrecipitation, x = YearlyPrecip$year,
+       pch = 16,
+       col = "red",
+       cex = 2)
+legend("topright", c("Normal Temperature values","Extreme Temperature values"),
+       lwd=c(NA,NA),
+       col=c("blue","red"),
+       pch=c(16,16),
+       bty="n")
+
+
+
+plot(YearlyWaterLevel$year, YearlyWaterLevel$waterlevel, pch = 16, cex = 1.3, col = "blue", xlab="Year", 
+     ylab= "Water Level (M)", 
+     main = "Water Level in Years with many Hot Months in Chicago from 1940-2020")
+points(y = YearlyWaterLevelExtreme$ETWaterLevel, x = YearlyWaterLevel$year,
+       pch = 16,
+       col = "red",
+       cex = 2)
+legend("topright", c("Normal Temperature values","Extreme Temperature values"),
+       lwd=c(NA,NA),
+       col=c("blue","red"),
+       pch=c(16,16),
+       bty="n")
+
+# Yearly plots
+
+plot(YearlyWaterLevel$waterlevel, YearlyPrecip$precipitation, pch = 16, cex = 1.3, col = "blue", xlab="Water Level (M)", 
+     ylab= "Precipitation(mm)", 
+     main = "Preciptation's Yearly Influence on Water Level in Lake Michigan from 1940-2020")
+legend("topright", c("Precipitation values","Linear Regression Model"),
+       lwd=c(NA,2),
+       col=c("blue","red"),
+       pch=c(16,NA),
+       bty="n")
+abline(lm(YearlyPrecip$precipitation~YearlyWaterLevel$waterlevel), lwd = 2, col = "red")
+
+
+
+plot(YearlyTemperature$temperature, YearlyPrecip$precipitation, pch = 16, cex = 1.3, col = "blue", xlab="Water Level (M)", 
+     ylab= "Precipitation(mm)", 
+     main = "Preciptation's Yearly Influence on Water Level in Lake Michigan from 1940-2020")
+legend("topright", c("Precipitation values","Linear Regression Model"),
+       lwd=c(NA,2),
+       col=c("blue","red"),
+       pch=c(16,NA),
+       bty="n")
+abline(lm(YearlyPrecip$precipitation~YearlyTemperature$temperature), lwd = 2, col = "red")
+
+
+plot(YearlyTemperature$temperature, YearlyWaterLevel$waterlevel, pch = 16, cex = 1.3, col = "blue", xlab="Temperature(F)", 
+     ylab= "Water Level (M)", 
+     main = "Temperature's Yearly Correlation to Water Level in Chicago from 1940-2020")
+legend("topright", c("Temperature values","Linear Regression Model"),
+       lwd=c(NA,2),
+       col=c("blue","red"),
+       pch=c(16,NA),
+       bty="n")
+abline(lm(YearlyWaterLevel$waterlevel~YearlyTemperature$temperature), lwd = 2, col = "red")
+
+Monthly3VariablePlot <- data.frame (YearlyWaterLevel$waterlevel, YearlyPrecip$precipitation, YearlyTemperature$temperature)
+
+colnames(Monthly3VariablePlot) <- c("waterlevel", "precipitation", "temperature")
+
+ggplot(data = Monthly3VariablePlot, mapping = aes(x = waterlevel, y = as.numeric(precipitation))) +
+  geom_point(aes(color = temperature), size = 2) +
+  scale_color_gradient(low = "yellow", high = "red") +
+  theme_classic() + ggtitle("Precipitation's Yearly Impact on Water Level, Colored by Temperature") +
+  xlab("Water Level (M)") + ylab("Precipitation(mm)")
+
+# Find extremely hot years
+# 11 Extremely Hot Years
+
+mean(YearlyTemperature$temperature)+ sd(YearlyTemperature$temperature)
+
+ifelse(YearlyTemperature$temperature > mean(YearlyTemperature$temperature)+ sd(YearlyTemperature$temperature),
+       YearlyTemperature$temperature, NA)
+
+HotYears <- data.frame (ifelse (YearlyTemperature$temperature == ifelse(YearlyTemperature$temperature > mean(YearlyTemperature$temperature)+
+                                                                   sd(YearlyTemperature$temperature),
+                                                                 YearlyTemperature$temperature, NA),
+                                YearlyTemperature$temperature, NA))
+
+colnames(HotYears) <- c("ExtremeTemperature")
+
+# Find YearlyPrecipExtreme2 and YearlyWaterLevelExtreme2
+
+YearlyPrecipExtreme2 <- data.frame (ifelse (YearlyPrecip$year == ifelse(HotYears$ExtremeTemperature > 0,
+                                                                       ExtremeYears$year, NA),YearlyPrecip$precipitation, NA ))
+
+YearlyWaterLevelExtreme2 <- data.frame (ifelse (YearlyWaterLevel$year == ifelse(HotYears$ExtremeTemperature > 0,
+                                                                               ExtremeYears$year, NA),YearlyWaterLevel$waterlevel, NA ))
+
+colnames(YearlyPrecipExtreme2) <- c("ETPrecipitation")
+
+colnames(YearlyWaterLevelExtreme2) <- c("ETWaterLevel")
+
+# Plot Precipitation and Water Level with extremely hot years
+
+plot(YearlyPrecip$year, YearlyPrecip$precipitation, pch = 16, cex = 1.3, col = "blue", xlab="Year", 
+     ylab= "Precipitation (mm)", 
+     main = "Precipitation in Hot Years in Chicago from 1940-2020")
+points(y = YearlyPrecipExtreme2$ETPrecipitation, x = YearlyPrecip$year,
+       pch = 16,
+       col = "green",
+       cex = 2)
+legend("topright", c("Normal Temperature values","Extreme Temperature values"),
+       lwd=c(NA,NA),
+       col=c("blue","green"),
+       pch=c(16,16),
+       bty="n")
+
+
+
+plot(YearlyWaterLevel$year, YearlyWaterLevel$waterlevel, pch = 16, cex = 1.3, col = "blue", xlab="Year", 
+     ylab= "Water Level (M)", 
+     main = "Water Level in Hot Years in Chicago from 1940-2020")
+points(y = YearlyWaterLevelExtreme2$ETWaterLevel, x = YearlyWaterLevel$year,
+       pch = 16,
+       col = "green",
+       cex = 2)
+legend("topright", c("Normal Temperature values","Extreme Temperature values"),
+       lwd=c(NA,NA),
+       col=c("blue","green"),
+       pch=c(16,16),
+       bty="n")
 
 
 
