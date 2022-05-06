@@ -227,9 +227,9 @@ abline(lm(YearlyPrecip$precipitation~YearlyWaterLevel$waterlevel), lwd = 2, col 
 
 
 
-plot(YearlyTemperature$temperature, YearlyPrecip$precipitation, pch = 16, cex = 1.3, col = "blue", xlab="Water Level (M)", 
+plot(YearlyTemperature$temperature, YearlyPrecip$precipitation, pch = 16, cex = 1.3, col = "blue", xlab="Temperature(F)", 
      ylab= "Precipitation(mm)", 
-     main = "Preciptation's Yearly Influence on Water Level in Lake Michigan from 1940-2020")
+     main = "Temperature's Yearly Correlation to Precipitation in Chicago from 1940-2020")
 legend("topright", c("Precipitation values","Linear Regression Model"),
        lwd=c(NA,2),
        col=c("blue","red"),
@@ -294,12 +294,12 @@ points(y = YearlyPrecipExtreme2$ETPrecipitation, x = YearlyPrecip$year,
        pch = 16,
        col = "green",
        cex = 2)
-legend("topright", c("Normal Temperature values","Extreme Temperature values"),
-       lwd=c(NA,NA),
-       col=c("blue","green"),
-       pch=c(16,16),
+legend("topright", c("Average Yearly Precipitation","Normal Temperature values","Extreme Temperature values"),
+       lwd=c(2,NA,NA),
+       col=c("red","blue","green"),
+       pch=c(NA,16,16),
        bty="n")
-
+abline(h= mean(YearlyPrecip$precipitation), col = "red")
 
 
 plot(YearlyWaterLevel$year, YearlyWaterLevel$waterlevel, pch = 16, cex = 1.3, col = "blue", xlab="Year", 
@@ -309,11 +309,11 @@ points(y = YearlyWaterLevelExtreme2$ETWaterLevel, x = YearlyWaterLevel$year,
        pch = 16,
        col = "green",
        cex = 2)
-legend("topright", c("Normal Temperature values","Extreme Temperature values"),
-       lwd=c(NA,NA),
-       col=c("blue","green"),
-       pch=c(16,16),
+legend("topright", c("Average Yearly Water Level","Normal Temperature values","Extreme Temperature values"),
+       lwd=c(2,NA,NA),
+       col=c("red","blue","green"),
+       pch=c(NA,16,16),
        bty="n")
-
+abline(h= mean(YearlyWaterLevel$waterlevel), col = "red")
 
 
