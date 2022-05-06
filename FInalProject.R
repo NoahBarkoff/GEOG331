@@ -144,7 +144,7 @@ ggplot(data= ExtremeYears, aes(x= year, y= ExtremeValues, group=1)) +
   scale_x_discrete(breaks = seq(1940,2020, by = 5))+
   xlab("Year") + ylab("Number of Extreme Months")+
   ggtitle("Number of Extremely High Temperature Months Per Year")
-
+summary(lm(year ~ ExtremeValues, data = ExtremeYears))
   
 
 # Years with 5 or more extreme temperatures
