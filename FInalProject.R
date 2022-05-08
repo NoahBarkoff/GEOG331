@@ -353,4 +353,8 @@ legend("topright", c("Average Yearly Water Level","Normal Temperature values","E
        bty="n")
 abline(h= mean(YearlyWaterLevel$waterlevel), col = "red")
 
+# Run t tests to see whether precipitation and water level values in extremely hot months
+# are significantly higher than average precipitation and water level values
+t.test(YearlyPrecipExtreme2$ETPrecipitation, YearlyPrecip$precipitation)
 
+t.test(YearlyWaterLevelExtreme2$ETWaterLevel, YearlyWaterLevel$waterlevel)
